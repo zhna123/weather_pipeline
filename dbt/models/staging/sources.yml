@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: staging
+    database: weather
+    schema: public
+    tables:
+      - name: staging_weather

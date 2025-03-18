@@ -1,3 +1,14 @@
 venv/
 .env
 data/
+
+dbt/target/
+dbt/dbt_packages/
+dbt/logs/
+
+logs/
+
+.vscode
+
+**/__pycache__/
+airflow/logs/

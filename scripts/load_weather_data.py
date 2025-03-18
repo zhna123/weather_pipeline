@@ -1,14 +1,8 @@
 import os
 import pandas as pd
-import psycopg2
 from psycopg2.extras import execute_values
-from dotenv import load_dotenv
+from db_connection import get_db_connection     
 
-POSTGRES_USER = os.getenv("POSTGRES_USER")
-POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
-POSTGRES_DB = os.getenv("POSTGRES_DB")
-POSTGRES_HOST = os.getenv("POSTGRES_HOST", "localhost")  # default to localhost if not set
-POSTGRES_PORT = os.getenv("POSTGRES_PORT", 5432)  # default to 5432 if not set
 
 # City-Station mapping
 # https://www.ncei.noaa.gov/maps/daily/
@@ -25,16 +19,7 @@ station_to_city = {
      72484653123: "las_vegas"
 }
 
-# PostgreSQL connection details
-conn = psycopg2.connect(
-    host=POSTGRES_HOST,
-    database=POSTGRES_DB,
-    user=POSTGRES_USER,
-    password=POSTGRES_PASSWORD,
-    port=POSTGRES_PORT
-)
-
-def load_csv_to_postgres(csv_file_path):
+def load_csv_to_postgres(csv_file_path, conn):
     """
     Load CSV into PostgreSQL
     """
@@ -70,11 +55,16 @@ def load_csv_to_postgres(csv_file_path):
 
     print(f"Data from {csv_file_path} loaded successfully!")
 
-# Load all CSV files
-csv_folder_path = '../data' 
-for filename in os.listdir(csv_folder_path):
-      csv_file_path = os.path.join(csv_folder_path, filename)
-      load_csv_to_postgres(csv_file_path)
 
+def load_all_csvs_to_postgres():
+    conn = get_db_connection()
+    # absolute path - inside container
+    csv_folder_path = '/opt/weather_pipeline/data' 
+    try:
+        with get_db_connection() as conn:
+            for filename in os.listdir(csv_folder_path):
+                csv_file_path = os.path.join(csv_folder_path, filename)
+                load_csv_to_postgres(csv_file_path, conn)
 
-conn.close()
+    except Exception as e:
+        print(f"Database connection error: {e}")
