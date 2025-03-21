@@ -1,4 +1,7 @@
-{{ config(materialized='view') }}
+{{ config(
+    materialized='incremental',
+    unique_key=['station_id', 'date']
+) }}
 
 SELECT 
     station_id,
@@ -13,3 +16,6 @@ SELECT
     CAST(prcp AS FLOAT) AS prcp
 FROM {{ source('staging', 'staging_weather') }}
 WHERE temp IS NOT NULL
+{% if is_incremental() %}
+    AND date > (SELECT MAX(date) FROM {{ this }})  -- Only process new data
+{% endif %}

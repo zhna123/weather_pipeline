@@ -47,7 +47,8 @@ services:
     env_file:  # Load environment variables from .env
       - .env
     ports:
-      - "8080:8080"
+      - "8080:8080" # airflow web ui
+      - "8081:8081"  # dbt Docs
     volumes:
       - ./airflow/dags:/opt/airflow/dags  # Mount DAGs
       - ./scripts:/opt/weather_pipeline/scripts  # Mount scripts

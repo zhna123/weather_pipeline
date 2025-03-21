@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: stg_weather
+    description: "Staging model for cleaned weather data with standardized types and filtered null temperatures."
+    columns:
+      - name: station_id
+        description: "Unique identifier for each weather station."
+        tests:
+          - not_null
+
+      - name: date
+        description: "Date of the weather observation."
+        tests:
+          - not_null
+
+      - name: name
+        description: "Raw station name from the original dataset."
+
+      - name: city
+        description: "Mapped city name corresponding to the station."
+
+      - name: temp
+        description: "Recorded temperature for the day (float)."
+        tests:
+          - not_null
+
+      - name: dewp
+        description: "Dew point temperature (float)."
+
+      - name: wdsp
+        description: "Wind speed (float)."
+
+      - name: max_temp
+        description: "Maximum recorded temperature for the day (float)."
+
+      - name: min_temp
+        description: "Minimum recorded temperature for the day (float)."
+
+      - name: prcp
+        description: "Precipitation amount (float)."

@@ -22,7 +22,6 @@ clean-targets:         # directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages"
 
-
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
 
@@ -32,10 +31,8 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   dbt:
     # Config indicated by + and applies to all files under models/example/
-    example:
-      +materialized: view
     staging:
-      +materialized: view
-      +schema: staging
+      +materialized: incremental
+      +unique_key: ['station_id', 'date']
     intermediate: 
       +materialized: table

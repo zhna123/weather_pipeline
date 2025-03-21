@@ -21,6 +21,7 @@ def create_staging_table():
       max_temp FLOAT,                   -- Maximum temperature for the day
       min_temp FLOAT,                   -- Minimum temperature for the day
       prcp FLOAT                        -- Precipitation in inches or millimeters
+      UNIQUE (station_id, date)         -- Prevent duplicate station data for the same date
     )
     """
     cur.execute(create_table_query)

@@ -46,6 +46,15 @@
 1. Create intermediate model
 2. update dbt_project.yml to include this model
 3. run dbt to create table
+### testing - run dbt pipeline
+* update schema.yml (testing and doc)
+* use seed to create mock table/data for testing
+  - create csv file in seeds folder(path specified in dbt_project.yml)
+  - run `dbt seed`
+* run dbt pipeline with `dbt build` (seed -> run -> test)
+* generate doc (inside airflow container, make sure to mount the correct port)
+  - `dbt docs generate` 
+  - serve `dbt docs serve --port 8081 --host 0.0.0.0`
 
 ### Orchestration - airflow
 #### Initialize and set up airflow

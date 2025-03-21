@@ -1,0 +1,132 @@
+version: 2
+
+models:
+  - name: int_weather_trends
+    description: "Aggregated seasonal weather statistics (avg temp, dew point, wind speed, etc.) by city and year."
+    columns:
+      - name: city
+        description: "Name of the city where the weather was recorded."
+        tests:
+          - not_null
+
+      - name: year
+        description: "Year in which the seasonal averages are computed."
+        tests:
+          - not_null
+
+      - name: season
+        description: "Season of the year (Winter, Spring, Summer, Fall) based on month."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Winter', 'Spring', 'Summer', 'Fall']
+
+      - name: avg_temp
+        description: "Average temperature for the season in Celsius (rounded to 2 decimals)."
+
+      - name: avg_dewp
+        description: "Average dew point temperature for the season."
+
+      - name: avg_wdsp
+        description: "Average wind speed for the season."
+
+      - name: max_temp
+        description: "Maximum temperature recorded during the season."
+
+      - name: min_temp
+        description: "Minimum temperature recorded during the season."
+
+      - name: total_prcp
+        description: "Total precipitation recorded during the season."
+  - name: seasonal_avg_temp
+    description: "Calculates average seasonal temperature by city and year."
+    columns:
+      - name: city
+        description: "City name where the weather data was recorded."
+        tests:
+          - not_null
+
+      - name: year
+        description: "Year extracted from the weather observation date."
+        tests:
+          - not_null
+
+      - name: season
+        description: "Season of the year (Winter, Spring, Summer, Fall)."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Winter', 'Spring', 'Summer', 'Fall']
+
+      - name: avg_temp
+        description: "Average temperature for the season and city."
+  - name: temp_trends
+    description: "Calculates year-over-year change in average temperature for each city."
+    columns:
+      - name: city
+        description: "City name where the weather data was recorded."
+        tests:
+          - not_null
+
+      - name: year
+        description: "Year extracted from the weather observation date."
+        tests:
+          - not_null
+
+      - name: avg_temp
+        description: "Average temperature for the city in that year."
+
+      - name: prev_year_avg
+        description: "Average temperature for the previous year (used for trend comparison)."
+
+      - name: temp_change
+        description: "Change in average temperature compared to the previous year."
+  - name: unusual_temp
+    description: "Identifies years with unusually warm or cold temperatures for each city based on standard deviation."
+    columns:
+      - name: city
+        description: "City name where the weather data was recorded."
+        tests:
+          - not_null
+
+      - name: year
+        description: "Year of the recorded average temperature."
+        tests:
+          - not_null
+
+      - name: avg_temp
+        description: "Average temperature for the city in that year."
+
+      - name: avg_temp_overall
+        description: "Overall average temperature for the city across all years."
+
+      - name: sd_temp
+        description: "Standard deviation of yearly average temperatures for the city."
+
+      - name: temperature_anomaly
+        description: "Categorizes the year as 'Unusually Warm', 'Unusually Cold', or 'Normal' based on deviation."
+        tests:
+          - accepted_values:
+              values: ['Unusually Warm', 'Unusually Cold', 'Normal']
+  - name: winter_summer_comp
+    description: "Compares average winter and summer temperatures for each city by year."
+    columns:
+      - name: city
+        description: "City where the temperature data was recorded."
+        tests:
+          - not_null
+
+      - name: year
+        description: "Year of the seasonal temperature comparison."
+        tests:
+          - not_null
+
+      - name: winter_avg
+        description: "Average temperature for winter months (Dec, Jan, Feb)."
+
+      - name: summer_avg
+        description: "Average temperature for summer months (Jun, Jul, Aug)."
+
+
+
+

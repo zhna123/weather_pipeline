@@ -21,7 +21,7 @@ station_to_city = {
 
 def load_csv_to_postgres(csv_file_path, conn):
     """
-    Load CSV into PostgreSQL
+    Load CSV into PostgreSQL, inserting new data and updating changes.
     """
     # Read the CSV file into a pandas DataFrame
     df = pd.read_csv(csv_file_path)
@@ -43,9 +43,18 @@ def load_csv_to_postgres(csv_file_path, conn):
 
     # Connect to PostgreSQL and insert data
     with conn.cursor() as cur:
+        # Define insert query with ON CONFLICT to handle duplicates
         insert_query = """
         INSERT INTO staging_weather (station_id, date, name, city, temp, dewp, wdsp, max_temp, min_temp, prcp)
         VALUES %s
+        ON CONFLICT (station_id, date) DO UPDATE
+        SET name = EXCLUDED.name
+        temp = EXCLUDED.temp,
+        dewp = EXCLUDED.dewp,
+        wdsp = EXCLUDED.wdsp,
+        max_temp = EXCLUDED.max_temp,
+        min_temp = EXCLUDED.min_temp,
+        prcp = EXCLUDED.prcp;
         """
         values = [tuple(row) for row in df[['station_id', 'date', 'name', 'city', 'temp', 'dewp', 'wdsp', 'max_temp', 'min_temp', 'prcp']].values]
 
